@@ -1,0 +1,329 @@
+<template>
+  <div class="card">
+    <div class="card-body">
+      <div class="row mb-5" >
+        <div class="col-md-6 bold">
+          <h5 class="card-title mb-2">Arrival Register Details</h5>
+        </div>
+        <div class="col-md-6 text-end">
+
+<button v-if="search==false" class="btn btn-primary btn-sm px-5 bold" @click="show_filter()"> Add Filters</button>
+
+
+        </div>
+      </div>
+
+      <div class="row" v-if="search">
+        <h4 class="card-title text-center">
+          <b>Filter Data</b>
+        </h4>
+        <div class="card-body align-items-center">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>Date From</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  name="date_from"
+                  v-model="filter.date_from"
+                />
+                <small class="text-danger" v-if="errors.date_from">{{
+                  errors.date_from[0]
+                }}</small>
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>Date To</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  name="Date_to"
+                  v-model="filter.date_to"
+                />
+                <small class="text-danger" v-if="errors.date_to">{{
+                  errors.date_to[0]
+                }}</small>
+              </div>
+            </div>
+
+            <div class="col-2">
+              <div class="form-group">
+                <label>Supplier Name</label>
+
+                <select
+                  class="form-control"
+                  name="supplier"
+                  v-model="filter.supplier"
+                >
+                  <option value="">Select name</option>
+                  <option
+                    v-for="supplier in supplier_details"
+                    :key="supplier.id"
+                    v-bind:value="supplier.id"
+                  >
+                    {{ supplier.name }}
+                  </option>
+                </select>
+
+                <small class="text-danger" v-if="errors.supplier">{{
+                  errors.supplier[0]
+                }}</small>
+              </div>
+            </div>
+
+            <div class="col-2">
+              <div class="form-group">
+                <label>Entry Type</label>
+
+                <select
+                  class="form-control"
+                  name="entry"
+                  v-model="filter.entry"
+                >
+                  <option value="">Select type</option>
+                  <option value="Local entry">Local entry</option>
+                  <option value="Gem-consignee">Gem-consignee</option>
+                </select>
+
+                <small class="text-danger" v-if="errors.entry">{{
+                  errors.entry[0]
+                }}</small>
+              </div>
+            </div>
+
+            <div class="col-2">
+              <div class="form-group">
+                <label>Section Name</label>
+
+                <select
+                  class="form-control"
+                  name="section"
+                  v-model="filter.section"
+                >
+                  <option value="">Select name</option>
+                  <option
+                    v-for="sections in section_details"
+                    :key="sections.id"
+                    v-bind:value="sections.id"
+                  >
+                    {{ sections.name }}
+                  </option>
+                </select>
+
+                <small class="text-danger" v-if="errors.section">{{
+                  errors.section[0]
+                }}</small>
+              </div>
+            </div>
+
+            <div
+              class="
+                col-1
+              mt-4
+             
+              "
+            >
+            <div>
+              <button class="btn btn-primary btn-sm px-4 mb-2" @click="Set_filter()">
+               Search
+              </button>
+              </div>
+            
+            </div>
+
+<div class="col-1 mt-4">
+  <div>
+               <button class="btn btn-primary btn-sm " @click="hide_filter()">
+               Clear Filter
+              </button>
+              </div>
+
+</div>
+
+
+
+          </div>
+        </div>
+      </div>
+
+      <table class="table text-center table-info" id="storeArrivalBook">
+        <thead>
+          <tr>
+           
+
+            <th scope="col">Date</th>
+ <th scope="col">Supplier</th>
+<th scope="col">item</th>
+         <th scope="col">Quantity</th>   
+           <th scope="col">Date</th>
+             <th scope="col">Date</th>
+             
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+      
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer"></div>
+
+    <!-- Modal -->
+
+    <div
+      class="modal fade arrivalsPageview"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myLargeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <arrival-details-view> </arrival-details-view>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+import DataTable from 'datatables.net-bs4';
+import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
+export default {
+  props: ["supplier_details", "section_details"],
+  data() {
+    return {
+      search:false,
+ 
+      filter: {
+        date_from: "",
+        date_to: "",
+        supplier: '',
+        entry: "",
+        section: "",
+      },
+
+      arrival_details: {},
+      errors: {},
+
+       table: ''
+    };
+  },
+
+ mounted() {
+  
+
+ var vm=this;
+
+this.table=     $('#storeArrivalBook').DataTable( {
+                ajax: 
+                {
+                 url:"office-arrivaldata",
+                 type: "GET",
+                  data: function(d) {
+                    d. supplier ='';
+                 
+                },},
+                columns: [
+
+                    { "data": "date" },
+
+ { "data": "supplier_name" },
+{ "data": "item_name" },
+
+{ "data": "quantity" },
+
+
+
+
+
+                    
+                 
+                    { 
+                        "data": null,
+                        render: function(data, type, row) {
+                            if(row.status == "Active") {
+                                return `<button class="btn btn-sm btn-success">Active</button>`;
+                            } else {
+                                return `<button class="btn btn-sm btn-warning">Inactive</button>`;
+                            }
+                        }
+                    },
+                    { 
+                        "data": null,
+                        render: function(data, type, row) {
+                            return `<button data-id="${row.id}" class="btn btn-info" data-toggle="modal" data-target="#exampleModal" id="edit"><i class="fa fa-edit"></i></button>`;
+                        }
+                    },
+                    { 
+                        "data": null,
+                        render: function(data, type, row) {
+                            return `<button data-id="${row.id}" class="btn btn-danger" @click="show_filters()" id="delete"><i class="fa fa-trash"></i></button>`;
+                        }
+                    }
+                ],
+
+dom: "Bfrtip",
+           buttons: ["copy", "csv", "excel", "pdf", "print"],
+
+            } );
+
+
+
+
+
+
+
+  },
+
+  methods: {
+
+    hide_filter(){
+
+
+
+this.search=false;
+this.get_Arrival_details();
+
+    },
+    show_filter(){
+this.search=true;
+    },
+    Set_filter() {
+     
+this.table.$('#storeArrivalBook').DataTable().ajax.reload()
+ 
+
+
+
+    },
+
+    convert_date(date) {
+      return moment(date).format("DD-MM-YYYY");
+    },
+    view_store_arrivals(arrivals) {
+      bus.$emit("arrivals-details", arrivals);
+    },
+
+    get_Arrival_details() {
+
+
+
+
+
+
+
+
+
+
+    },
+  },
+};
+</script>
+
+<style>
+</style>

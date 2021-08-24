@@ -1,0 +1,80 @@
+
+
+
+.box{
+    padding: 0!important;
+}
+.storearrivalspan{
+    color: red ;
+}
+.form-control {
+border:none !important;
+border-bottom: 1px solid sienna!important;
+}
+
+
+
+.inline{
+    display: inline-block!important;
+}
+
+textarea.form-control {
+     height: none!important;
+}
+
+.mainHeight{
+
+    min-height: 430px;
+   
+}
+
+
+#TeamMembers {
+    background: #e8cbc0;
+        
+    background: -webkit-linear-gradient(to right, #f77b4e, #f8a04e);
+    background: linear-gradient(to right, #f77b4e, #f8a04e);
+/*     
+    background: -webkit-linear-gradient(to right, #e8cbc0, #636fa4);
+    background: linear-gradient(to right, #e8cbc0, #636fa4); */
+    
+}
+.shadow-sm{
+max-width: 280px;
+
+
+
+
+}
+
+/* .social-link {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    border-radius: 50%;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.social-link:hover, .social-link:focus {
+    background: #ddd;
+    text-decoration: none;
+    color: #555;
+} */
+
+.b{
+
+    font-weight: bold!important;
+}
+
+
+@media (min-width: 768px) {
+    .modal-xl {
+      width: 90%!important;
+     max-width:1200px!important;
+    }
+  }
